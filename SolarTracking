@@ -1,0 +1,63 @@
+/* Name: Solar Tracking Code
+* Purpose: Track light source and rotate the motor with the light source
+* Created: April 14,2022
+* Modified: May 5, 2022
+* Author: Sonith, Blessed, Kevin
+*/
+
+#include <Servo.h>
+Servo sg90;
+int initial_position = 90;
+int LDR1 = A0;
+int LDR2 = A1;
+int error = 100;
+int servopin = 9;
+
+int sensorValue1 = 0;
+int sensorValue2 = 0;
+
+void setup() {
+  sg90.attach(servopin);
+  pinMode(LDR1,INPUT);
+  pinMode(LDR2,INPUT);
+  sg90.write(initial_position);
+  delay(10);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  
+  int R1 = analogRead(LDR1);
+  int R2 = analogRead(LDR2);
+  int diff1 = abs(R1-R2);
+  int diff2 = abs(R2-R1);
+
+  if((diff1 <= error) ||(diff2 <= error)){
+    
+    }
+  else{
+    if(R1 > R2)
+     {
+      initial_position = --initial_position;
+     }
+    if(R1 < R2)
+     {
+      initial_position = ++initial_position;
+     }
+    }
+
+    if(initial_position >= 180) {initial_position = 180;}
+    if(initial_position <= 0) {initial_position = 0;}
+    sg90.write(initial_position);
+    delay(100);
+
+    
+    sensorValue1 = analogRead(LDR1);
+    sensorValue2 = analogRead(LDR2);
+    
+    Serial.println(sensorValue1);
+    Serial.println(sensorValue2);
+    
+ 
+}
